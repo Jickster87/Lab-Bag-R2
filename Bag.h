@@ -10,10 +10,10 @@ class Bag {
 
 private:
 	//TODO - Representation
-	TElem* elems;
-	TElem* freq;
-	int daCapacity;
-	int bagSize;
+	TElem* valuesArray;
+	TElem* frequencyArray;
+	int daTotalCapacity; // Total capacity
+	int currentArraySize;
 
 	//DO NOT CHANGE THIS PART
 	friend class BagIterator;

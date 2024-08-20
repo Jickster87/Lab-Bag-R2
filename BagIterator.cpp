@@ -7,28 +7,33 @@ using namespace std;
 
 BagIterator::BagIterator(const Bag& c): bag(c)
 {
-	//TODO - Implementation
+	currentPosition = 0;
 }
 
 void BagIterator::first() {
-	//TODO - Implementation
+	currentPosition = 0;
 }
 
 
 void BagIterator::next() {
-	//TODO - Implementation
+	if (currentPosition  >= bag.currentArraySize)
+	{
+		throw exception();
+	}
+	currentPosition++;
 }
 
 
 bool BagIterator::valid() const {
-	//TODO - Implementation
-	return false;
+	return currentPosition < bag.currentArraySize;
 }
-
 
 
 TElem BagIterator::getCurrent() const
 {
-	//TODO - Implementation
-	return NULL_TELEM 
+	if (currentPosition >= bag.currentArraySize)
+	{
+		throw exception();
+	}
+	return bag.valuesArray[currentPosition];
 }

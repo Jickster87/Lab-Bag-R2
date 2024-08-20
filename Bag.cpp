@@ -6,39 +6,39 @@ using namespace std;
 
 
 Bag::Bag() {
-	daCapacity = 8;
-	bagSize = 0;
-	elems = new TElem[daCapacity];
-	freq = new TElem[daCapacity];
+	daTotalCapacity = 8;
+	currentArraySize = 0;
+	valuesArray = new TElem[daTotalCapacity];
+	frequencyArray = new TElem[daTotalCapacity];
 }
 
 
 void Bag::add(TElem elem) {
 	//resize if needed
-	if (bagSize == daCapacity)
+	if (currentArraySize == daTotalCapacity)
 	{
-		daCapacity *= 2;
-		TElem* tempArray = new TElem[daCapacity];
-		TElem* tempFreq = new TElem[daCapacity];
+		daTotalCapacity *= 2;
+		TElem* tempArray = new TElem[daTotalCapacity];
+		TElem* tempFreq = new TElem[daTotalCapacity];
 		int index = 0;
-		while (index < bagSize)
+		while (index < currentArraySize)
 		{
-			tempArray[index] = elems[index];
-			tempFreq[index] = freq[index];
+			tempArray[index] = valuesArray[index];
+			tempFreq[index] = frequencyArray[index];
 			index++;
 		}
-		delete[] elems;
-		delete[] freq;
-		elems = tempArray;
-		freq = tempFreq;
+		delete[] valuesArray;
+		delete[] frequencyArray;
+		valuesArray = tempArray;
+		frequencyArray = tempFreq;
 
 	}
-
+	//search for elem
 	bool found = false;
 	int i;
-	for (i = 0; i < bagSize; i++)
+	for (i = 0; i < currentArraySize; i++)
 	{
-		if (elems[i] == elem)
+		if (valuesArray[i] == elem)
 		{
 			found = true;
 			break;
@@ -47,48 +47,89 @@ void Bag::add(TElem elem) {
 
 	if (found)
 	{
-		//elem already exists, don't add just increment freq
-		freq[i]++;
+		//elem already exists, don't add just increment frequencyArray
+		frequencyArray[i]++;
 	}
 	else
 	{
-		//add new elem & !increment freq counter
-		elems[bagSize-1] = elem;
-		freq[bagSize-1] = 1;
+		//add new elem & !increment frequencyArray counter
+		valuesArray[currentArraySize] = elem; // VStudio needs "-1" for buffer overrun, on xCode don't need it
+		frequencyArray[currentArraySize] = 1;
 		//increment size of the array
-		bagSize++;
+		currentArraySize++;
 	}
 
 }
 
 
 bool Bag::remove(TElem elem) {
-	//TODO - Implementation
-	return false; 
+	//search for elem
+	bool found = false;
+	int i;
+	for (i = 0; i < currentArraySize; i++)
+	{
+		if (valuesArray[i] == elem)
+		{
+			found = true;
+			break;
+		}
+	}
+
+	if (found)
+	{
+		if (frequencyArray[i] > 1)
+		{
+			frequencyArray[i]--;
+		}
+		else
+		{
+			valuesArray[i] = valuesArray[currentArraySize - 1];
+			frequencyArray[i] = frequencyArray[currentArraySize - 1];
+			currentArraySize--;
+		}
+		return true;
+	}
+	return false;
 }
 
 
 bool Bag::search(TElem elem) const {
-	//TODO - Implementation
-	return false; 
+	for (int i = 0; i < currentArraySize; i++)
+	{
+		if (valuesArray[i] == elem)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 
 int Bag::nrOccurrences(TElem elem) const {
-	//TODO - Implementation
+	int nrOccured = 0;
+	for (int i = 0; i < currentArraySize; i++)
+	{
+		if (valuesArray[i] == elem)
+		{
+			return frequencyArray[i];
+		}
+	}
 	return 0; 
 }
 
 
 int Bag::size() const {
-	//TODO - Implementation
-	return 0;
+	int totalSize = 0;
+	for (int i = 0; i < currentArraySize; i++)
+	{
+		totalSize += frequencyArray[i];
+	}
+	return totalSize;
 }
 
 
 bool Bag::isEmpty() const {
-	//TODO - Implementation
-	return 0;
+	return currentArraySize == 0;
 }
 
 BagIterator Bag::iterator() const {
@@ -97,6 +138,7 @@ BagIterator Bag::iterator() const {
 
 
 Bag::~Bag() {
-	//TODO - Implementation
+	delete[] frequencyArray;
+	delete[] valuesArray;
 }
 
